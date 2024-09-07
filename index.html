@@ -66,13 +66,14 @@
         <!-- Right Side Input / Output -->
         <div class="col d-flex flex-column rounded bg-dark p-3">
             <div class="h-50">
-                <label for="Input" class="text-light">Input</label>
+                <label for="Input" class="text-light">Input :</label>
+                
                 <textarea type="text" class="form-control h-75" aria-label="Last name"></textarea>
 
             </div>
 
             <div class="h-50">
-                <label for="Output" class="text-light">Output</label>
+                <label for="Output" class="text-light">Output :</label>
                 <textarea type="text" class="form-control h-75" aria-label="Last name"></textarea>
             </div>
         </div>
@@ -84,7 +85,7 @@
 
         function textEditorArea() {
             return {
-                mode: "text/x-c++src",  // default mode
+                mode: "",  // default mode
                 theme: "dracula",
                 lineNumbers: true,
                 autoCloseBrackets: true
