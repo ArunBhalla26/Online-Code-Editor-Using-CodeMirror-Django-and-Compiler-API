@@ -11,6 +11,7 @@ class IndexView(TemplateView):
 
 # Replace with your actual API key and host
 API_KEY = 'Enter API Key'
+
 API_HOST = 'onecompiler-apis.p.rapidapi.com'
 API_URL = '/api/v1/run'
 
@@ -52,15 +53,15 @@ def compile_code(request):
 
         # Submit the code to the API
         result = submit_code(code, language, stdin)
-
+        # print("result =" ,result )
         # Extract output from result
         output = result.get('stdout', '') or result.get('stderr', '') or result.get('error', '')
-
+        # print("output =" , output)
         return JsonResponse({'output': output})
     
     except Exception as e:
         # Print error details for debugging
-        print(f"Error occurred: {e}")
+        # print(f"Error occurred: {e}")
         return JsonResponse({'error': str(e)}, status=500)
 
 
