@@ -33,6 +33,7 @@
         #io {
             font-family: "Poppins";
         }
+        
     </style>
 
     <!-- Themes -->
@@ -47,14 +48,14 @@
 
 
 
+    <script src="{% static 'codemirror\addon\wrap\hardwrap.js' %}"></script>
     <script src="{% static 'codemirror/lib/codemirror.js' %}"></script>
     <script src="{% static 'codemirror/addon/edit/closebrackets.js' %}"></script>
-    <!-- Modes -->
+    <!-- Languages -->
     <script src="{% static 'codemirror/mode/clike/clike.js' %}"></script>
     <script src="{% static 'codemirror/mode/java/java.js' %}"></script>
     <script src="{% static 'codemirror/mode/javascript/javascript.js' %}"></script>
     <script src="{% static 'codemirror/mode/python/python.js' %}"></script>
-
 
 
 </head>
@@ -93,10 +94,13 @@
 
                         </div>
 
-                        <button id="runCode" type="button" class="btn btn-success ">
+                        <button title="Ctrl + Enter" id="runCode" type="button" class="btn btn-success ">
                             <i class="bi bi-play"></i> Run
                         </button>
-
+                        
+                        <!-- <div id="runCodeHover" style="color: white;" class="btn btn-success ">
+                            Ctrl + <i class="bi bi-arrow-return-left"></i>
+                        </div> -->
                     </div>
                 </div>
             </nav>
@@ -122,73 +126,90 @@
     </div>
 
 
-    <script>
-        function textEditorArea() {
-            return {
-                mode: "",  // default mode
-                theme: "eclipse", //default theme
-                lineNumbers: true,
-                autoCloseBrackets: true,
-                tabSize: 2,
-                indentWithTabs: true,
-
-            };
-        }
-
-        function setMode() {
-            const language = languageOption.value;
-            let mode;
-            switch (language) {
-                case 'Python': mode = "text/x-python"; break;
-                case 'Cpp': mode = "text/x-c++src"; break;
-                case 'Java': mode = "text/x-java"; break;
-                case 'C': mode = "text/x-csrc"; break;
-                case 'CSharp': mode = "text/x-csharp"; break;
-
-            }
-            editor.setOption("mode", mode);
-        }
-
-        function setTheme() {
-            const theme = themeBox.value;
-            editor.setOption("theme", theme);
-        }
-        let themeBox = document.getElementById("chooseTheme");
-        themeBox.addEventListener("change", setTheme);
-
-        let editor = CodeMirror.fromTextArea(document.getElementById("editor"), textEditorArea());
-
-        let languageOption = document.getElementById("chooseLanguage");
-        languageOption.addEventListener("change", setMode);
-
-        // Adjust the editor size
-        let width = window.innerWidth * 0.7;
-        editor.setSize(width, "500");
-
-        document.getElementById("runCode").addEventListener("click", async () => {
-            const code = editor.getValue();
-            const language = languageOption.value;
-
-            try {
-                const response = await fetch("{% url 'compile_code' %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ code: code, language: language })
-                });
-
-                const result = await response.json();
-                document.getElementById('output').textContent = result.output || result.error;
-                if (result.error) {
-                    console.error('Error:', result.error);
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-            }
-        });
-    </script>
 </body>
+<script>
+
+    function textEditorArea() {
+        return {
+            mode: "",  // default mode
+            theme: "eclipse", //default theme
+            lineNumbers: true,
+            autoCloseBrackets: true,
+            tabSize: 4,
+            indentWithTabs: true,
+            foldGutter: true,
+            wrap: true,
+
+
+        };
+    }
+
+    function setMode() {
+        const language = languageOption.value;
+        let mode;
+        switch (language) {
+            case 'Python': mode = "text/x-python"; break;
+            case 'Cpp': mode = "text/x-c++src"; break;
+            case 'Java': mode = "text/x-java"; break;
+            case 'C': mode = "text/x-csrc"; break;
+            case 'CSharp': mode = "text/x-csharp"; break;
+
+        }
+        editor.setOption("mode", mode);
+    }
+
+    function setTheme() {
+        const theme = themeBox.value;
+        editor.setOption("theme", theme);
+    }
+    let themeBox = document.getElementById("chooseTheme");
+    themeBox.addEventListener("change", setTheme);
+
+    let editor = CodeMirror.fromTextArea(document.getElementById("editor"), textEditorArea());
+
+    let languageOption = document.getElementById("chooseLanguage");
+    languageOption.addEventListener("change", setMode);
+
+    // Adjust the editor size
+    let width = window.innerWidth * 0.7;
+    editor.setSize(width, "500");
+
+
+    // Runing or submitting the code
+
+    async function run() {
+
+
+        const code = editor.getValue();
+        const language = languageOption.value;
+
+        try {
+            const response = await fetch("{% url 'compile_code' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ code: code, language: language })
+            });
+
+            const result = await response.json();
+            document.getElementById('output').textContent = result.output || result.error;
+            if (result.error) {
+                console.error('Error:', result.error);
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+    editor.setOption("extraKeys", {
+        "Ctrl-Enter": function () {
+            // Run the code
+            run();
+        }
+    });
+
+    document.getElementById("runCode").addEventListener("click", run);
+</script>
 
 </html>
