@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+  <section>
+    
+      </div>
+    </button>
+      <div >
+            <br>
+        <h2 class = "text-center">
+            Login Yourself Now !
+        </h2>
+        <br>
+
+        <div style = " font-family : poppins;" class = " container shadow P-5">
+        <form action="" method="post" >
+
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for m in messages %}
+                    <p {% if m.tags %} class = "alert alert-{{m.tags}} mb-5" {% endif %} >
+                {{m}}
+                    </p>
+                {% endfor %}
+            {% endif %}
+
+                {{ form.as_p }}
+               
+              <input type= "submit" value= "Submit" class="btn btn-primary btn-block mb-4"  >
+              <br>
+            <div class="text-center text-primary fw-bold">
+                <sma11>New User ? 
+                    <a href="{% url 'signup' %}" class="text-danger">
+                Sign UP   
+                 </a>
+                </small>
+            </div>
+            <br>
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <p class="alert-danger my-3">
+                        {{error}}
+                    </p>
+                {% endfor %}
+            {% endif %}
+                        
+
+        </form>
+      </div>
+      </div>
+    </section>
+
+{% endblock content %}
