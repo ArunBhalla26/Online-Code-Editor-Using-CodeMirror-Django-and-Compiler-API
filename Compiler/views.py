@@ -12,7 +12,6 @@ class IndexView(TemplateView):
     template_name = "index.html"
    
 API_KEY = 'Enter API Key'
-API_KEY = 'de69673619msha7e8b18773e144fp166c37jsne38d286efbef'
 
 def submit_code(code, language):
     if language == "python" :
