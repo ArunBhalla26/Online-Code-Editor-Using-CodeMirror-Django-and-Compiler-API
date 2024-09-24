@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Code Editor</title>
+    <!-- MDB CDN -->
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'codemirror/lib/codemirror.css' %}" />
+    <!-- JetBrains Font  -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+        rel="stylesheet" />
+    <!-- Poppins Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet" />
+
+    <!-- Themes -->
+    <link rel="stylesheet" href="{% static 'codemirror/theme/dracula.css' %}" />
+    <link rel="stylesheet" href="{% static 'codemirror\theme\icecoder.css' %}" />
+    <link rel="stylesheet" href="{% static 'codemirror\theme\cobalt.css' %}" />
+    <link rel="stylesheet" href="{% static 'codemirror\theme\blackboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'codemirror\theme\monokai.css' %}" />
+    <link rel="stylesheet" href="{% static 'codemirror\theme\material.css' %}" />
+    <link rel="stylesheet" href="{% static 'codemirror\theme\material-darker.css' %}" />
+    <link rel="stylesheet" href="{% static 'codemirror/theme/eclipse.css' %}" />
+
+    <script src="{% static 'codemirror\addon\wrap\hardwrap.js' %}"></script>
+    <script src="{% static 'codemirror/lib/codemirror.js' %}"></script>
+    <script src="{% static 'codemirror/addon/edit/closebrackets.js' %}"></script>
+    <!-- Languages -->
+    <script src="{% static 'codemirror/mode/clike/clike.js' %}"></script>
+    <script src="{% static 'codemirror/mode/java/java.js' %}"></script>
+    <script src="{% static 'codemirror/mode/javascript/javascript.js' %}"></script>
+    <script src="{% static 'codemirror/mode/python/python.js' %}"></script>
+
+    <style>
+        nav {
+            background-color: #212529;
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- navbar start -->
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg m-3 rounded">
+        <!-- Container wrapper -->
+        <div class="container-fluid">
+            <!-- Toggle button -->
+            <button data-mdb-collapse-init class="navbar-toggler" type="button"
+                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse d-flex align-items-center justify-content-center"
+                id="navbarSupportedContent">
+
+                <!-- Navbar brand -->
+                <a class="navbar-brand mt-lg-0" href="{% url 'home' %}">
+                    <img style="height: 40px;" src="{% static 'images\3.png' %}" height="15" alt="Logo"
+                        loading="lazy" />
+                </a>
+
+                <!-- Name  -->
+                <ul class="navbar-nav me-auto mt-1  ">
+                    <li class="nav-item " style="font-size: x-large; font-weight: 100 ; ">
+
+                        <a class="nav-link" style="margin: 0px; padding: 0px" href="{% url 'home' %}">
+                            {% if user.is_authenticated %}
+                            <i class="bi bi-code"></i> Hello, {{ user.username|capfirst }} </a>
+                        {% else %}
+                        <i class="bi bi-code"></i> Hello, Guest
+                     </a>
+                        {% endif %}
+                    </li>
+                    
+                    
+                    {% block setTitle %}
+                      
+                    {% endblock setTitle %}
+                    
+                </ul>
+
+
+            </div>
+            <!-- Name end -->
+
+
+            <!-- Collapsible wrapper -->
+
+            <!-- Right elements -->
+
+            <div class="d-flex align-items-center">
+                <ul class="navbar-nav me-auto mb-lg-0 px-3">
+                    <!-- <li class="nav-item px-1">
+                        <a class="nav-link" href="#">Dashboard</a>
+                    </li> -->
+                    <li class="nav-item px-1">
+                        <a class="nav-link" href="#">My Codes</a>
+                    </li>
+
+                    {% if not user.is_authenticated %}
+                    <li class="nav-item px-1">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <!-- Notifications -->
+                <div class="dropdown">
+                    <a data-mdb-dropdown-init class="text-reset me-3 dropdown-toggle hidden-arrow" href="#"
+                        id="navbarDropdownMenuLink" role="button" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge rounded-pill badge-notification bg-danger">1</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                        <li>
+                            <a class="dropdown-item" href="#">Some news</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">Another news</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Avatar -->
+                <div class="dropdown px-3">
+                    <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
+                        id="navbarDropdownMenuAvatar" role="button" aria-expanded="false">
+                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
+                            alt="Black and White Portrait of a Man" loading="lazy" />
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
+                        <li>
+                            <a class="dropdown-item" href="#">My profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">Settings</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Right elements -->
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+
+    <!-- navbar end -->
+
+    <!-- Block for pages -->
+    {% block content %} {% endblock content %}
+</body>
+<!-- MDB -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.umd.min.js"></script>
+
+</html>

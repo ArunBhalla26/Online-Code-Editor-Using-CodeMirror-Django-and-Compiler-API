@@ -1,21 +1,19 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-import json
-import requests
 from django.views.generic import TemplateView
+from django.shortcuts import render
+import json
 
+import requests
+from Codes.models import *
 
 class IndexView(TemplateView):
     template_name = "index.html"
-
-# Replace with your actual API key and host
+   
 API_KEY = 'Enter API Key'
 
-# def submit_code(code, language, stdin=""):
 def submit_code(code, language):
-
-
     if language == "python" :
        
         URL = API_HOST = "python-3-code-compiler.p.rapidapi.com/"
