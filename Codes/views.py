@@ -5,13 +5,33 @@ from django.contrib import messages
 from django.contrib.auth import  logout
 from django.shortcuts import render , redirect
 from django.http import JsonResponse
+from django.contrib.auth import views as auth_view 
+from django.core.paginator import Paginator
 from.forms import *
 from .models import *
 import json 
+
+def AvatarImageForBaseHTMLView(request):
+    user = request.user
+    consumer = Consumer.objects.get(user = user)
+    return  render(request, 'base.html', {'consumer': consumer})
+    
 def LogoutView(request):
     logout(request)
     messages.success(request , " Sucessfully Loged-Out ! ")
     return redirect('login')
+
+class MyPasswordChangeView(auth_view.PasswordChangeView):
+    template_name = "PasswordChangeForm.html"
+    form_class = MyPasswordChangeForm
+    success_url = '/pwdchangedone/'
+
+    def form_valid(self, form):
+        user = form.save()
+        # update_session_auth_hash(self.request, user)
+        logout(self.request)  # Call your specific function here
+        messages.success(self.request, 'Your password was successfully updated!')
+        return super().form_valid(form)
 
 class ConsumerRegistrationFormView(TemplateView):
     def get(self , request):
@@ -31,6 +51,7 @@ class ConsumerRegistrationFormView(TemplateView):
         return render(request , "ConsumerRegistrationForm.html", {"form" : form} )
     
 @csrf_exempt
+
 def SaveCode(request):
     user  =  request.user
     data = json.loads(request.body)
@@ -65,41 +86,67 @@ def UpdateCode(request ,id ):
     else :
         return JsonResponse({'message' : ' Please enter some Code and Title :(' , 'color' :'alert-danger'}, status=400)
 
-def  MyCodesView(request):  
-    user = request.user
-    # if user :
-    mycodes = MyCodes.objects.filter(user = user)
-    codes = MyCodes.objects.filter(user = user)
-    return render(request , "MyCodes.html" , {"mycodes" : mycodes} )
-    return render(request , "NoSavedCode.html" )
+
+
+class  MyCodesView(TemplateView):  
+    def get(self, request) :
+        user = request.user
+        
+       
+        codes = MyCodes.objects.filter(user = user).order_by("-updated_at")
+        if codes  :
+            pages = Paginator(codes , 4)
+            page_number =request.GET.get('page') 
+            display_page  = pages.get_page(page_number)
+            return render(request , "MyCodes.html" , {"mycodes" : display_page} )
+
+        return render(request , "NoSavedCode.html" )
+    def post(self, request) :
+        user = request.user
+        searchTitle = request.POST.get('searchTitle')
+        if searchTitle :
+            mycodes = MyCodes.objects.filter(user = user , title__icontains = searchTitle)
+            if mycodes :
+                return  render(request , "MyCodes.html" , {"mycodes" : mycodes} )
+            return render(request , 'NoSavedCode.html')
+        return redirect('mycode')
+
 
 def OpenCodeView(request ,id):
     user  = request.user
     code = MyCodes.objects.get(user = user ,id = id)
     return render(request , "OpenCode.html" , {"code" : code} )
 
-def ProfileView(request ) :
-    user = request.user
+class ProfileView(TemplateView ) :
+    def get(self , request) :
+        user = request.user
 
-    consumer = Consumer.objects.get(user = user) 
-    if consumer:
-        return render(request , "Profile.html" ,context= {'consumer' :consumer})
-    return render(request , "NoProfile.html")
+        consumer, created = Consumer.objects.get_or_create(user = user) 
 
-
-class newprofileView(TemplateView):
-    def get(self , request):
-        form = ProfileForm()
-        return render(request , "newprofile.html", {"form" : form} )
+        if consumer:
+            return render(request , "Profile.html" ,context= {'consumer' :consumer})
     
-    def post(self , request):
-        form = ProfileForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-                     
-            messages.success(request , " Congratulations :) Changes Saved SucessFully ! ")
-            form.save()
-            return redirect('login')
+    def post(self , request) :
+        user = request.user
+        consumer, created = Consumer.objects.get_or_create(user = user) 
+        if 'removeAvatar' in request.POST:
+            consumer.avatar.delete()
+            consumer.avatar = None  
+            consumer.save()
+            return redirect('profile') 
+
+
+
+        name  =  request.POST.get('name')
+        avatar = request.FILES.get('avatar')
+        if name:
+            consumer.name = name
         
-        return render(request , "newprofile.html", {"form" : form} )
+        if avatar:
+            consumer.avatar = avatar
+        print("\n\n\n\n\n Saved And name is :" , name)
+        consumer.save()
+        return redirect('profile')
     
+
+

@@ -64,12 +64,20 @@
         .nav-link:hover {
             color: white;
         }
+        #footerlink{
+            background-color: #212529;
+            color: white;
+        }
+        .invert {
+            filter: invert(1);
+            display: inline-block; 
+        }
     </style>
 </head>
 
 <body>
     <!-- navbar start -->
-    
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg m-3 rounded">
         <!-- Container wrapper -->
@@ -100,33 +108,25 @@
                             <i class="bi bi-code"></i> Hello, {{ user.username|capfirst }} </a>
                         {% else %}
                         <i class="bi bi-code"></i> Hello, Guest
-                     </a>
+                        </a>
                         {% endif %}
                     </li>
-                    
-                    
+
+
                     {% block setTitle %}
-                      
+
                     {% endblock setTitle %}
-                    
+
                 </ul>
 
 
             </div>
-            <!-- Name end -->
-
-
-            <!-- Collapsible wrapper -->
-
-            <!-- Right elements -->
 
             <div class="d-flex align-items-center">
                 <ul class="navbar-nav me-auto mb-lg-0 px-3">
-                    <!-- <li class="nav-item px-1">
-                        <a class="nav-link" href="#">Dashboard</a>
-                    </li> -->
+                    
                     {% if user.is_authenticated %}
-                      
+
                     <li class="nav-item px-1">
                         <a class="nav-link" href="{% url 'mycode' %}">My Codes</a>
                     </li>
@@ -135,6 +135,9 @@
                     {% if not user.is_authenticated %}
                     <li class="nav-item px-1">
                         <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item px-1">
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -158,24 +161,37 @@
                     </ul>
                 </div> -->
                 <!-- Avatar -->
+                {% if user.is_authenticated %}
+
+
                 <div class="dropdown px-3">
                     <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                         id="navbarDropdownMenuAvatar" role="button" aria-expanded="false">
-                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
+                        {% if consumer.avatar %}
+
+                        <img src="{{ consumer.avatar.url }}" class="rounded-circle" height="25" width="25"
+                            alt="Black and White Portrait of a Man" />
+
+                        {% else %}
+                        <img src="{% static 'images\dummy.jpg' %}" class="rounded-circle" height="25" width="25"
                             alt="Black and White Portrait of a Man" loading="lazy" />
+
+                        {% endif %}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                         <li>
                             <a class="dropdown-item" href="{% url 'profile' %}">My profile</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Settings</a>
+                            <a class="dropdown-item" href="{% url 'pwdchange' %}">Password Chnage</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                         </li>
                     </ul>
+
                 </div>
+                {% endif %}
             </div>
             <!-- Right elements -->
         </div>
@@ -186,7 +202,89 @@
     <!-- navbar end -->
 
     <!-- Block for pages -->
-    {% block content %} {% endblock content %}
+    {% block content %} 
+    {% endblock content %}
+
+
+
+    <footer class="text-center bg-body-tertiary row m-3" >
+        <!-- Grid container -->
+        <div id= 'footerlink'class="container pt-4">
+          <!-- Section: Social media -->
+          <section  class="mb-4 invert">
+            <!-- Linkedin -->
+            <a
+              
+              class="btn btn-link btn-floating btn-lg text-body m-1"
+              href="https://www.linkedin.com/in/hiarunbhalla/"
+              role="button"
+              
+              ><i class="fab fa-linkedin"></i
+            ></a>
+            <!-- Github -->
+            <a
+              
+              class="btn btn-link btn-floating btn-lg text-body m-1"
+              href="https://github.com/ArunBhalla26"
+              role="button"
+              
+              ><i class="fab fa-github"></i
+            ></a>
+            <!-- Twitter -->
+            <a
+              
+              class="btn btn-link btn-floating btn-lg text-body m-1"
+              href="https://x.com/arunbhalla26"
+              role="button"
+              
+              ><i class="fab fa-twitter"></i
+            ></a>
+
+            <!-- Facebook -->
+            <!-- <a
+              
+              class="btn btn-link btn-floating btn-lg text-body m-1"
+              href="#!"
+              role="button"
+              
+              ><i class="fab fa-facebook-f"></i
+            ></a> -->
+      
+            
+      
+            <!-- Google
+            <a
+              
+              class="btn btn-link btn-floating btn-lg text-body m-1"
+              href="#!"
+              role="button"
+              
+              ><i class="fab fa-google"></i
+            ></a> -->
+      
+            <!-- Instagram -->
+            <!-- <a
+              
+              class="btn btn-link btn-floating btn-lg text-body m-1"
+              href="#!"
+              role="button"
+              
+              ><i class="fab fa-instagram"></i
+            ></a> -->
+      
+            
+          </section>
+          <!-- Section: Social media -->
+        </div>
+        <!-- Grid container -->
+      
+        <!-- Copyright -->
+        <div id  = 'footerlink' class="text-center p-3" >
+          © 2024 Copyright:
+          <a  href="https://mdbootstrap.com/" style="color: white; text-decoration: none;">Arun Bhalla | All Rights Reserved</a>
+        </div>
+        <!-- Copyright -->
+      </footer>
 </body>
 <!-- MDB -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.umd.min.js"></script>

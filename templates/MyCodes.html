@@ -1,5 +1,28 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block setTitle %}
+
+    <li class="nav-item"></li>
+    <form action="{% url 'mycode' %}" method="post">
+        {% csrf_token %}
+        <div class="text-light d-flex">
+
+            <p class="nav-link" style="padding: 0px; margin: 3px; font-size: x-large; "> &emsp; Search :
+            <pre>  </pre>
+            </p>
+            <textarea name="searchTitle" rows="1" cols="52" placeholder=" &ensp;Enter any title to search  " style=" align-content: center;
+        border-radius: 30px;
+        min-height:40px; max-height: 40px;"></textarea>
+
+            <button class="btn btn-outline-success my-2 my-sm-0 mx-3" type="submit">Search</button>
+        </div>
+    </form>
+    </li>
+{% endblock setTitle %}
+
+
+
 {% block content %}
 <style>
     section {
@@ -17,25 +40,64 @@
                 </h5>
 
             </div>
+            <div class="col d-flex">
             <div class="card-body">
                 <!-- <h5 class="card-title"></h5> -->
-                
-                <p class="card-text">Language :  {{ code.language }}</p>
-                <p class="card-text">Created on :  {{code.created_at}}</p>
-                <p class="card-text"> Last Updated on :  {{code.updated_at}}</p>
 
-                
-                    <a href="{% url 'opencode' code.id %} " class="btn btn-success ml-auto">Open With Editor</a>
-                
-                
+                <p class="card-text">Language : {{ code.language }}</p>
+                <p class="card-text">Created on : {{code.created_at}}</p>
+                <p class="card-text"> Last Updated on : {{code.updated_at}}</p>                
             </div>
+                <a href="{% url 'opencode' code.id %} " class="btn btn-success m-5">Open With Editor</a>
+        </div>
+
         </div>
 
 
 
     </div>
-
     {% endfor %}
+
+
+
+
+
+    <pagination>
+        <ul class="pagination justify-content-center">
+            {% if mycodes.has_previous %}
+                <li class="page-item">
+                    <a class="page-link px-2" href="?page={{ mycodes.previous_page_number }}" tabindex="-1">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item  px-2 disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+            {% endif %}
+    
+            {% for page_num in mycodes.paginator.page_range %}
+                {% if page_num == mycodes.number %}
+                    <li class="page-item active px-2" aria-current="page">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item px-2">
+                        <a class="page-link " href="?page={{ page_num }}">{{ page_num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+    
+            {% if mycodes.has_next %}
+                <li class="page-item  px-2">
+                    <a class="page-link" href="?page={{ mycodes.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item  px-2 disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+
+    
 </section>
 
 {% endblock content %}

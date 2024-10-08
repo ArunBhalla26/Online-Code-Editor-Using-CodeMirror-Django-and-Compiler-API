@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container text-center my-5">
+    <img src="{% static 'images/noResult.png' %}" alt="No Results Found" class="img-fluid" style="max-height: 400px;">
+    
+    <p class="lead">We couldn't find any results matching your search. Please try again.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary mt-3">Go Back Home</a>
+</div>
+{% endblock content %}

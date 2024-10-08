@@ -2,14 +2,23 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
-from django.shortcuts import render
+from django.shortcuts import render 
 import json
 
 import requests
 from Codes.models import *
 
+
 class IndexView(TemplateView):
-    template_name = "index.html"
+    def get(self, request) :
+        user = request.user
+        if user.is_authenticated :
+            consumer = Consumer.objects.get(user = user)
+            return  render(request, 'index.html', {'consumer': consumer})
+        else :
+            return render(request, 'index.html')
+        template_name = "index.html"
+
    
 API_KEY = 'Enter API Key'
 

@@ -1,65 +1,74 @@
 {% extends "base.html" %} {% load static %} {% block content %}
+<style>
+  section{
+    font-family: Poppins;
+  }
+</style>
 <section class="row m-3">
 
-  
+  <br />
+
   <div class="shadow p-3 rounded">
     <br />
     <h2 class="text-center">Your profile</h2>
     <br />
 
     <div style="font-family: poppins" class="container P-5">
-      <form action="" method="post">
-        {% csrf_token %} {% if messages %} {% for m in messages %}
+      <form action="{% url 'profile' %}" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        {% if messages %}
+        {% for m in messages %}
         <p {% if m.tags %} class="alert alert-{{m.tags}} mb-5" {% endif %}>
           {{m}}
         </p>
-        {% endfor %} {% endif %}
+        {% endfor %}
+        {% endif %}
 
         <div class="text-center">
           {% if consumer.avatar %}
-          <img
-            src="{{consumer.avatar.url}}"
-            class="rounded"
-            height="150px"
-            alt="..."
-          />
 
-          <h5>{{consumer.username}}</h5>
-          {% else %}
-          <img
-            src="https://www.proteomics.uni-freiburg.de/images/team/portrait-dummy.png/image"
-            class="rounded"
-            height="150px"
-            alt="..."
-          />
+          <img src="{{ consumer.avatar.url }}" class="rounded-circle m-2" alt="Profile Picture" width="150" height="150"
+            style="object-fit: cover;">
+
           <h5>{{consumer.name}}</h5>
-          {% endif %}
+          {% else %}
+          <img src="{% static 'images\dummy.jpg' %}"class="rounded-circle m-2" alt="Profile Picture" width="150" height="150"
+          style="object-fit: cover;">
+
+          {% if consumer.name %}
+
+          <h5>{{consumer.name}}</h5>
+          {% else %}
           <h5>{{user.username| capfirst}}</h5>
+          {% endif %}
+          {% endif %}
         </div>
+
+       
         <div class="form-group mb-3">
           <label for="exampleInputEmail1"> Name</label>
-          <input type="text" class="form-control" placeholder="Enter Name" />
-        </div>
-
-        <div class="form-group mb-3">
-          <label for="exampleInputEmail1"> Email Address</label>
-          <input type="email" class="form-control" placeholder="Enter Email" />
+          <input type="text" name='name' class="form-control" placeholder="Enter Name" />
         </div>
         <div class="form-group mb-3">
           <label for="exampleInputEmail1"> Avatar </label>
-          <br />
-          <input type="file" class="form-control-file" />
-        </div>
+          <br>
+          <input type="file" name='avatar' accept="image/*" class="form-control" />
 
-        <input
-          type="submit"
-          value="Submit"
-          class="btn btn-primary btn-block mb-4"
-        />
+        </div>
+        {% if consumer.avatar %}
+        <input type="submit" name  = "removeAvatar" value="Remove Avatar" class=" btn btn-danger  mb-4" />
+          
+        {% endif %}
+        <input type="submit" value="Submit" class="btn btn-primary btn-block mb-4" />
       </form>
+
+
+
     </div>
   </div>
- 
+
+  
 </section>
 
 {% endblock content %}

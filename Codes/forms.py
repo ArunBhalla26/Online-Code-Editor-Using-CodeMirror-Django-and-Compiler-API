@@ -43,20 +43,6 @@ class LoginForm(AuthenticationForm):
     upass_att = {'autocomplete' : 'current-password', 'class': 'form-control ' }
     password = forms.CharField(label=_("Password"), strip=False, widget = forms.PasswordInput(attrs= upass_att))
 
-
-class ProfileForm (forms.ModelForm):
-    class Meta:
-        model = Consumer
-        fields = ['name','avatar']
-        widgets = { "name":  forms.TextInput(attrs=widget_attrs),
-                   "avatar": forms.FileInput(attrs=widget_attrs) }
-                   
-        labels = {
-            "name": "Full Name",
-            "avatar"  :  "Profile Picture",
-
-        }
-
 class MyPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(label = "Old Password", widget = forms.PasswordInput(attrs=widget_attrs))
     new_password1 = forms.CharField(label="New Password" , widget = forms.PasswordInput(attrs=widget_attrs), help_text=password_validation.password_validators_help_text_html())
