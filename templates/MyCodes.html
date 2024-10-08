@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    section {
+        font-family: "Poppins";
+    }
+</style>
+<section>
+    {% for code in mycodes %}
+    <div class="row m-3">
+        <div class="card mb-3">
+            <div class="card-header ">
+                <h5>
+                    Title :
+                    {{ code.title }}
+                </h5>
+
+            </div>
+            <div class="card-body">
+                <!-- <h5 class="card-title"></h5> -->
+                
+                <p class="card-text">Language :  {{ code.language }}</p>
+                <p class="card-text">Created on :  {{code.created_at}}</p>
+                <p class="card-text"> Last Updated on :  {{code.updated_at}}</p>
+
+                
+                    <a href="{% url 'opencode' code.id %} " class="btn btn-success ml-auto">Open With Editor</a>
+                
+                
+            </div>
+        </div>
+
+
+
+    </div>
+
+    {% endfor %}
+</section>
+
+{% endblock content %}

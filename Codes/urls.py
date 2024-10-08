@@ -8,7 +8,14 @@ urlpatterns = [
                                                         authentication_form  = LoginForm ),
                                                         name="login"),
     path("logout/", LogoutView, name="logout"),
-    # path("setTitle/", setTitle, name="setTitle"),
     path("saveCode/", SaveCode, name="saveCode"),
+    path("updateCode/<uuid:id>", UpdateCode, name="updatecode"),
+    path("mycode/", MyCodesView, name="mycode"),
+    path("opencode/<uuid:id>", OpenCodeView, name="opencode"),
+    path("profile/", ProfileView, name="profile"),
+    path("new/", newprofileView.as_view(), name="np"),
+    # path("profile/", UpdateProfileView, name="updateprofilr"),
+    
+    
 ]
 

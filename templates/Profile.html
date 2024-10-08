@@ -1,0 +1,65 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<section class="row m-3">
+
+  
+  <div class="shadow p-3 rounded">
+    <br />
+    <h2 class="text-center">Your profile</h2>
+    <br />
+
+    <div style="font-family: poppins" class="container P-5">
+      <form action="" method="post">
+        {% csrf_token %} {% if messages %} {% for m in messages %}
+        <p {% if m.tags %} class="alert alert-{{m.tags}} mb-5" {% endif %}>
+          {{m}}
+        </p>
+        {% endfor %} {% endif %}
+
+        <div class="text-center">
+          {% if consumer.avatar %}
+          <img
+            src="{{consumer.avatar.url}}"
+            class="rounded"
+            height="150px"
+            alt="..."
+          />
+
+          <h5>{{consumer.username}}</h5>
+          {% else %}
+          <img
+            src="https://www.proteomics.uni-freiburg.de/images/team/portrait-dummy.png/image"
+            class="rounded"
+            height="150px"
+            alt="..."
+          />
+          <h5>{{consumer.name}}</h5>
+          {% endif %}
+          <h5>{{user.username| capfirst}}</h5>
+        </div>
+        <div class="form-group mb-3">
+          <label for="exampleInputEmail1"> Name</label>
+          <input type="text" class="form-control" placeholder="Enter Name" />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="exampleInputEmail1"> Email Address</label>
+          <input type="email" class="form-control" placeholder="Enter Email" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="exampleInputEmail1"> Avatar </label>
+          <br />
+          <input type="file" class="form-control-file" />
+        </div>
+
+        <input
+          type="submit"
+          value="Submit"
+          class="btn btn-primary btn-block mb-4"
+        />
+      </form>
+    </div>
+  </div>
+ 
+</section>
+
+{% endblock content %}

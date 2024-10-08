@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% load static %}
+{% block setTitle %}
+
+<li class="nav-item"></li>
+<div class="text-light d-flex">
+
+    <p class="nav-link" style="padding: 0px; margin: 3px; font-size: x-large; "> &emsp; Title :
+    <pre>  </pre>
+    </p>
+    {% if not code %}
+
+    <textarea name="" id="codeTitle" rows="1" cols="60" placeholder=" &ensp;Title" style=" align-content: center;
+    border-radius: 30px;
+    min-height:40px; max-height: 40px;"></textarea>
+    {% else %}
+
+    <textarea name="" id="codeTitle" rows="1" cols="60" placeholder=" &ensp;Title" style=" align-content: center;
+    border-radius: 30px;
+    min-height:40px; max-height: 40px;">{{code.title}}</textarea>
+    {% endif %}
+
+
+</div>
+
+</li>
+{% endblock setTitle %}
+
+
+{% block content %}
+
+<section>
+    <style>
+        .CodeMirror {
+            font-family: 'JetBrains Mono' !important;
+        }
+
+        nav,
+        #io {
+            font-family: "Poppins";
+        }
+    </style>
+
+    <body>
+
+        <div class="row m-3">
+            <!-- Alert for submission start -->
+            <div class="alert alert-dismissible fade show" style="display:none ;" id="saveResultMessage" role="alert">
+                &emsp;
+                <strong id="alertMessageContent"></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <!-- Alert for submission end -->
+            <div class="col">
+                <nav class="bg-dark p-2 px-3 mb-2 rounded">
+                    <div class="d-flex justify-content-between">
+                        <div class="col-auto w-25">
+                            <label class="visually-hidden" for="chooseLanguage">Preference</label>
+                            <select class="form-select" id="chooseLanguage">
+
+                                <option value="">Choose Language...</option>
+                                <option value="C">C</option>
+                                <option value="Cpp">C++ 17</option>
+                                <option value="CSharp">C#</option>
+                                <option value="Java">Java</option>
+                                <option value="Python">Python</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-between " style="width:60%">
+                            <action>
+
+                                <button onclick="saveCode()" Ctrl + S" id="saveCode" type="button"
+                                    class="btn btn-success mx-1">
+                                    <i class="bi bi-sd-card"></i> Save
+                                </button>
+
+
+                                <button title="Ctrl + Enter" id="runCode" type="button" class="btn btn-success mx-1 ">
+                                    <i class="bi bi-play"></i> Run
+                                </button>
+                            </action>
+                            <div class="col-auto ">
+
+                                <select class="form-select" id="chooseTheme">
+                                    <option value="">Change Theme...</option>
+                                    <option value="blackboard">Blackboard</option>
+                                    <option value="cobalt">Cobalt</option>
+                                    <option value="dracula">Dracula</option>
+                                    <option value="icecoder">Icecoder</option>
+                                    <option value="material">Material</option>
+                                    <option value="material-darker">Material Dark</option>
+                                    <option value="monokai">Monokai</option>
+                                </select>
+
+                            </div>
+
+                            <!-- <div id="runCodeHover" style="color: white;" class="btn btn-success ">
+                            Ctrl + <i class="bi bi-arrow-return-left"></i>
+                        </div> -->
+                        </div>
+                    </div>
+                </nav>
+                {% if not code %}
+
+                <textarea id="editor"></textarea>
+                {% else %}
+                <textarea id="editor"> {{code.code}}</textarea>
+                {% endif %}
+
+            </div>
+            <!-- Right Side Input / Output -->
+
+            <div id='io' class="col d-flex flex-column rounded  bg-dark p-3">
+
+                <!-- <div class="h-50">
+                <label for="Input" class="text-light">Input:</label>
+                <textarea id="input" class="form-control h-75" aria-label="Input"></textarea>
+            </div> -->
+
+                <!-- Title  -->
+                {% comment %}
+
+                <div class="text-light">
+                    <h4> Title : </h4>
+
+                    <p> &emsp; <!-- tabspace -->
+                        I am a Title </p>
+                </div>
+                {% endcomment %}
+                <br>
+                <br>
+                <div style="height: 100%;">
+                    <label for="Output" class="text-light">Output:</label>
+                    <textarea id="output" class="form-control h-75" aria-label="Output"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+    <script>
+
+        async function saveCode() {
+
+            const code = editor.getValue();
+            const title = codeTitle.value;
+            
+
+            const language = languageOption.value;
+
+            const response = await fetch("{% url 'updatecode' code.id %}", {
+
+                method: 'POST',
+                body: JSON.stringify({ code: code, title: title, language: language }),
+            });
+
+            const result = await response.json();
+            const message = document.getElementById('saveResultMessage')
+            const alertMessageContent = document.getElementById('alertMessageContent');
+            alertMessageContent.innerText = result.message;
+            message.style.display = 'block';
+            message.classList.add(result.color);
+
+
+        }
+        function textEditorArea() {
+            return {
+                mode: "",  // default mode
+                theme: "eclipse", //default theme
+                lineNumbers: true,
+                autoCloseBrackets: true,
+                tabSize: 4,
+                indentWithTabs: true,
+
+            };
+        }
+
+        function setMode() {
+            const language = languageOption.value;
+            let mode;
+            switch (language) {
+                case 'Python': mode = "text/x-python"; break;
+                case 'Cpp': mode = "text/x-c++src"; break;
+                case 'Java': mode = "text/x-java"; break;
+                case 'C': mode = "text/x-csrc"; break;
+                case 'CSharp': mode = "text/x-csharp"; break;
+
+            }
+            editor.setOption("mode", mode);
+        }
+
+        function setTheme() {
+            const theme = themeBox.value;
+            editor.setOption("theme", theme);
+        }
+        let themeBox = document.getElementById("chooseTheme");
+        themeBox.addEventListener("change", setTheme);
+
+        let editor = CodeMirror.fromTextArea(document.getElementById("editor"), textEditorArea());
+        let codeTitle = document.getElementById("codeTitle");
+
+        let languageOption = document.getElementById("chooseLanguage");
+        
+        languageOption.addEventListener("change", setMode);
+
+        // Adjust the editor size
+        let width = window.innerWidth * 0.7;
+        editor.setSize(width, "500");
+
+
+        // Runing or submitting the code
+
+        async function run() {
+
+
+            const code = editor.getValue();
+            const language = languageOption.value;
+
+            try {
+                const response = await fetch("{% url 'compile_code' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ code: code, language: language })
+                });
+
+                const result = await response.json();
+                document.getElementById('output').textContent = result.output || result.error;
+                if (result.error) {
+                    console.error('Error:', result.error);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+        editor.setOption("extraKeys", {
+            "Ctrl-Enter": function () {
+                // Run the code
+                run();
+            }
+        });
+
+        document.getElementById("runCode").addEventListener("click", run);
+    </script>
+
+    </html>
+</section>
+{% endblock content %}
