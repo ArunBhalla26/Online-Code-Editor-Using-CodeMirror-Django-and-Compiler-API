@@ -7,7 +7,9 @@ import json
 
 import requests
 from Codes.models import *
-
+import os 
+from dotenv import load_dotenv
+load_dotenv() 
 
 class IndexView(TemplateView):
     def get(self, request) :
@@ -18,9 +20,8 @@ class IndexView(TemplateView):
         else :
             return render(request, 'index.html')
         template_name = "index.html"
-
+API_KEY = os.getenv('API_KEY')
    
-API_KEY = 'Enter API Key'
 
 def submit_code(code, language):
     if language == "python" :
