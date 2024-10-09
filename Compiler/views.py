@@ -21,6 +21,7 @@ class IndexView(TemplateView):
             return render(request, 'index.html')
         template_name = "index.html"
 API_KEY = os.getenv('API_KEY')
+
    
 
 def submit_code(code, language):
