@@ -7,6 +7,7 @@ from django.shortcuts import render , redirect
 from django.http import JsonResponse
 from django.contrib.auth import views as auth_view 
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 from.forms import *
 from .models import *
 import json 
@@ -49,9 +50,9 @@ class ConsumerRegistrationFormView(TemplateView):
             return redirect('login')
         
         return render(request , "ConsumerRegistrationForm.html", {"form" : form} )
-    
-@csrf_exempt
 
+# @login_required   
+@csrf_exempt
 def SaveCode(request):
     user  =  request.user
     data = json.loads(request.body)
@@ -65,6 +66,8 @@ def SaveCode(request):
         return JsonResponse({'message': 'Code saved successfully :) ' , 'color' :'alert-success'}, status=201)
     else :
         return JsonResponse({'message' : ' Please enter some Code and Title :(' , 'color' :'alert-danger'}, status=400)
+
+# @login_required
 @csrf_exempt
 def UpdateCode(request ,id ):
     user  =  request.user
