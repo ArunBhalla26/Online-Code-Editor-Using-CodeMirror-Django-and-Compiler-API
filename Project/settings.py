@@ -144,7 +144,7 @@ STATIC_URL = '/static/'  # Corrected to include leading slash
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  # Make sure this directory exists
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Changed STATICROOT to STATIC_ROOT
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = 'media/'
