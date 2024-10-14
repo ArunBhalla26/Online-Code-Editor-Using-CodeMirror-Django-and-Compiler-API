@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = os.getenv("DEBUG_KEY")
+DEBUG = os.getenv("DEBUG_Bool")
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
@@ -88,16 +89,26 @@ WSGI_APPLICATION = 'Project.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'koyebdb',
+#         'USER': 'koyeb-adm',
+#         'PASSWORD':os.getenv('compilerDatabasePassword') ,
+#         'HOST': 'ep-blue-brook-a23mai4l.eu-central-1.pg.koyeb.app',
+#         'OPTIONS': {'sslmode': 'require'},   
+#     }
+# }
+
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'koyebdb',
-        'USER': 'koyeb-adm',
-        'PASSWORD':os.getenv('compilerDatabasePassword') ,
-        'HOST': 'ep-blue-brook-a23mai4l.eu-central-1.pg.koyeb.app',
-        'OPTIONS': {'sslmode': 'require'},   
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),  
+        ssl_require=True                   
+    )
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
