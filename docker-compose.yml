@@ -1,17 +1,20 @@
-version: '3'
+version: '3.8'
+
 services:
   web:
     build: .
-    command: gunicorn Project.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn --bind 0.0.0.0:8000 Project.wsgi:application
     volumes:
       - .:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-  db:
-    image: postgres:13
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: dbname
+      DJANGO_ALLOWED_HOSTS: "online-Compiler.vercel.appv"
+  
+  migrate:
+    build: .
+    command: python manage.py migrate
+    volumes:
+      - .:/app
+    environment:
+      DJANGO_ALLOWED_HOSTS: "online-Compiler.vercel.app"
