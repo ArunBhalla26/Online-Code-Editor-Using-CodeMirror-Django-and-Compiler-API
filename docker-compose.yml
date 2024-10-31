@@ -16,5 +16,6 @@ services:
     command: python manage.py migrate
     volumes:
       - .:/app
+    working_dir: /app
     environment:
-      DJANGO_ALLOWED_HOSTS: "online-Compiler.vercel.app"
+      DJANGO_ALLOWED_HOSTS: "*"
