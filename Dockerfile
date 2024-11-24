@@ -20,7 +20,10 @@ COPY . .
 EXPOSE 8000
 
 # Command to run your application using Gunicorn
-CMD ["gunicorn", "wsgi:application", "--workers", "3", "--bind",
+CMD ["gunicorn", "project.wsgi:application", "--workers", "3", "--bind", "0.0.0.0:8000"]
+
+# CMD ["gunicorn", "wsgi:application", "--workers", "3", "--bind",
+
 
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # CMD ["gunicorn", "--bind", "0.0.0.0:8000", "Project.wsgi:application"]
