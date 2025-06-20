@@ -4,11 +4,41 @@
 
 This project is an online code editor built with Django and CodeMirror. It allows users to write, compile, and execute code in various programming languages through a web interface. The editor is styled using Bootstrap and relies on a Compiler API to handle code execution.
 
-### Sample : 
+<!--
+### Sample :
 1.![Screenshot 2024-09-07 174612](https://github.com/user-attachments/assets/146415f4-10ef-49bf-87c7-c0e98d506ae1)
 2. ![Screenshot 2024-09-07 174441](https://github.com/user-attachments/assets/329fc606-04f0-46dc-8c29-2be4e4ca2186)
-3.![Screenshot 2024-09-07 174539](https://github.com/user-attachments/assets/ec3ff58e-e70b-4f40-87b2-eb6985518f76)
+3.![Screenshot 2024-09-07 174539](https://github.com/user-attachments/assets/ec3ff58e-e70b-4f40-87b2-eb6985518f76) -->
 
+## 🖼️ Screenshots
+
+### Landing Page
+
+![Landing Page](screenshots/LandingPage.png)
+
+### Languge Options
+
+![Language Options](screenshots/LanguageOptions.png)
+
+### Theme Options
+
+![Theme Options](screenshots/SupportedThemes.png)
+
+### Code Execution
+
+![Code Execution](screenshots/InputOutput.png)
+
+### Retriving Saved Codes
+
+![Retriving Saved Codes](screenshots/RetriveSavedCodes.png)
+
+### Login page
+
+![Login Page](screenshots/LoginPage.png)
+
+### Signup Page
+
+![Signup Page](screenshots/SignupPage.png)
 
 ## Features
 
@@ -43,24 +73,37 @@ This project is an online code editor built with Django and CodeMirror. It allow
    ```bash
    git clone https://github.com/ArunBhalla26/Online-Code-Editor-Using-CodeMirror-Django-and-Compiler-API.git
 
+   ```
+
 2. **Add a 'Static' folder containing 'CodeMirror' Library** :
 
    ```terminial
    Require CodeMirror version 5 or more.
 
+   ```
+
 3. **Start a virtual environment** :
-     Add requirements.txt file
-   ``` terminial
+   Add requirements.txt file
+
+   ```terminial
    python -m venv venv
 
    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-4. **Install Required Packges **:
+   ```
+
+4. **Install Required Packges**:
+
    ```terminial
    pip install -r requirements.txt
-   
-5.**Take Your API Key & Token** : 
-    
-    I have used Rapid API for the API Key and Token , you can consider that.
-6.** Start Django Server** :
+
+   ```
+
+5. **Take Your API Key & Token** :
+
+   I have used Rapid API for the API Key and Token , you can consider that.
+
+6. **Start Django Server** :
+
    ```terminial
-   python manage.py runserver   
+   python manage.py runserver
+   ```
